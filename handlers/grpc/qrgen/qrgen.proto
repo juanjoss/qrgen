@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/juanjoss/qrgen/handlers/grpc/qrgen";
+
+package qrgen;
+
+service QrGenerator {
+    rpc GenerateQR (QrGenRequest) returns (QrImage) {};
+}
+
+message QrGenRequest {
+    string source = 1;
+}
+
+message QrImage {
+    bytes barcode = 1;
+}
