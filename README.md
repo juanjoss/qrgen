@@ -10,7 +10,8 @@ endpoints
 - GET / (main page)
 - POST /qr (generate QR)
 
-build and run the image with docker
-> `docker build -t qrgen:latest .`
+pull and run the image with docker
 
-> `docker run -dp <port>:<port> --env APP_PORT= --env GRPC_SERVER_PORT= qrgen`
+`docker pull jujoss/qrgen:v1`
+
+`docker run -dp <port>:<port> --env APP_PORT=<port> --env GRPC_SERVER_PORT=<port> jujoss/qrgen:<tag>`
