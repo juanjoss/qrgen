@@ -1,4 +1,6 @@
 ARG GO_VERSION=1.19.0
+ARG USER_UID=1313
+ARG USERNAME=qrgen
 
 FROM golang:${GO_VERSION} AS dev
 RUN apt-get update && apt-get install -y protobuf-compiler
@@ -18,10 +20,11 @@ RUN protoc --go_out=. --go_opt=paths=source_relative \
     handlers/grpc/qrgen/qrgen.proto
 
 FROM dev as build
-RUN CGO_ENABLED=0 GOOS=linux go build \ 
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \ 
     -ldflags='-w -s -extldflags "-static"' \
     -a -installsuffix cgo -o qrs .
 
 FROM gcr.io/distroless/static AS prod
-COPY --from=build /app/qrs .
-CMD ["./qrs"]
+USER nonroot:nonroot
+COPY --from=build --chown=nonroot:nonroot /app/qrs .
+ENTRYPOINT ["./qrs"]
