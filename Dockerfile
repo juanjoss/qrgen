@@ -1,6 +1,4 @@
 ARG GO_VERSION=1.19.0
-ARG USER_UID=1313
-ARG USERNAME=qrgen
 
 FROM golang:${GO_VERSION} AS dev
 RUN apt-get update && apt-get install -y protobuf-compiler
