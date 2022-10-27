@@ -15,7 +15,7 @@ RUN go mod tidy
 # compile grpc .proto files
 RUN protoc --go_out=. --go_opt=paths=source_relative \
     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-    handlers/grpc/qrgen/qrgen.proto
+    pkg/grpc/qrgen/qrgen.proto
 
 FROM dev as build
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \ 

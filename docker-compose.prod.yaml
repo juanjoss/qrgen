@@ -1,0 +1,5 @@
+version: '3'
+
+services:
+  qrgen:
+    image: jujoss/qrgen:latest

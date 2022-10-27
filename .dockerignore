@@ -1,4 +1,7 @@
 .git
+.github/*
 .dockerignore
 Dockerfile
+docker-compose.yaml
 README.md
+config/*

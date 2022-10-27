@@ -4,11 +4,11 @@ import (
 	"embed"
 	"os"
 
-	grpc "github.com/juanjoss/qrgen/handlers/grpc/server"
-	"github.com/juanjoss/qrgen/handlers/http"
+	api "github.com/juanjoss/qrgen/pkg/api"
+	grpc "github.com/juanjoss/qrgen/pkg/grpc/server"
 )
 
-//go:embed views/*
+//go:embed view/*
 var fs embed.FS
 
 func main() {
@@ -19,8 +19,9 @@ func main() {
 		grpc.ListenAndServe(os.Getenv("GRPC_SERVER_PORT"))
 	}()
 
-	// running http server
-	http.ListenAndServe(os.Getenv("APP_PORT"), fs)
+	// creating and running the http server
+	s := api.NewServer(os.Getenv("APP_PORT"), fs)
+	s.ListenAndServe()
 
 	<-done
 }

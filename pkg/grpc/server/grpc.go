@@ -8,8 +8,9 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/juanjoss/qrgen/handlers/grpc/qrgen"
-	"github.com/juanjoss/qrgen/qr"
+	"github.com/boombuler/barcode"
+	"github.com/boombuler/barcode/qr"
+	pb "github.com/juanjoss/qrgen/pkg/grpc/qrgen"
 	"google.golang.org/grpc"
 )
 
@@ -20,13 +21,20 @@ type server struct {
 func (s *server) GenerateQR(ctx context.Context, req *pb.QrGenRequest) (*pb.QrImage, error) {
 	log.Printf("GRPC request: generating QR code for source %v", req.Source)
 
-	qr, err := qr.Generate(req.Source)
+	encodedData, err := qr.Encode(req.Source, qr.L, qr.Auto)
 	if err != nil {
+		log.Printf("unable to encode source: %v", err)
+		return &pb.QrImage{}, err
+	}
+
+	barcode, err := barcode.Scale(encodedData, 256, 256)
+	if err != nil {
+		log.Printf("unable to scale encoded barcode: %v", err)
 		return &pb.QrImage{}, err
 	}
 
 	buffer := new(bytes.Buffer)
-	err = png.Encode(buffer, *qr)
+	err = png.Encode(buffer, barcode)
 	if err != nil {
 		return &pb.QrImage{}, err
 	}
