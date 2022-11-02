@@ -4,8 +4,6 @@ go 1.19
 
 require (
 	github.com/boombuler/barcode v1.0.1
-	github.com/gorilla/handlers v1.5.1
-	github.com/gorilla/mux v1.8.0
 	github.com/prometheus/client_golang v1.13.0
 	go.opentelemetry.io/otel/metric v0.33.0
 	go.opentelemetry.io/otel/sdk v1.11.1
@@ -29,7 +27,6 @@ require (
 )
 
 require (
-	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect

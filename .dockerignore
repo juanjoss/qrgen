@@ -1,7 +1,7 @@
 .git
-.github/*
+.github
 .dockerignore
+config
 Dockerfile
 docker-compose.yaml
 README.md
-config/*

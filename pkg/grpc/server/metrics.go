@@ -1,9 +1,13 @@
-package api
+package grpc
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"net/http"
+	"os"
 
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/metric/instrument/syncfloat64"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -20,7 +24,7 @@ func (s *server) initMeter() (func(context.Context) error, error) {
 	}
 
 	meterProvider := metric.NewMeterProvider(metric.WithReader(metricExporter))
-	s.meter = meterProvider.Meter("github.com/juanjoss/qrgen/pkg/api")
+	s.meter = meterProvider.Meter("qrgen-meter")
 
 	s.initMetrics()
 
@@ -35,5 +39,18 @@ func (s *server) initMetrics() {
 
 	s.metrics = &metrics{
 		qrgenRequestsCounter: qrgenRC,
+	}
+
+	go s.serveMetrics()
+}
+
+func (s *server) serveMetrics() {
+	log.Printf("serving metrics at port %s /metrics", os.Getenv("HTTP_METRICS_PORT"))
+
+	http.Handle("/metrics", promhttp.Handler())
+
+	err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("HTTP_METRICS_PORT")), nil)
+	if err != nil {
+		log.Printf("unable to serve metrics: %v", err)
 	}
 }
